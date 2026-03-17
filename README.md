@@ -4,6 +4,12 @@ A peer-to-peer campus task marketplace Android app that enables real-time task m
 
 ---
 
+## Project Poster
+
+This poster summarizes the system design, features, and user flow.
+
+<img src="poster.png" width="500"/>
+
 ## Features
 
 **For Requestors**
@@ -82,9 +88,5 @@ app/src/main/java/com/example/campuscourier/
 
 4. Open the project in Android Studio, sync Gradle, and run on a device or emulator
 
----
 
-## Requirements
 
-- Min SDK: 24 (Android 7.0)
-- Target SDK: 34 (Android 14)
