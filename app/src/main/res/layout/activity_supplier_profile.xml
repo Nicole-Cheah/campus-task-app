@@ -1,0 +1,142 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/oval"
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_account_circle_24" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LOGOUT"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/buttonLogout" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="2dp"
+                android:text="Account"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/telehandle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Update Telegram"
+                    android:clickable="true"
+                    android:onClick="updatetelegram"
+                    android:textSize="15sp"
+                    android:drawableLeft="@drawable/telegram_black_icon"
+                    android:drawablePadding="20dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <TextView
+                    android:id="@+id/changepassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:onClick="changepassword"
+                    android:text="Change Password"
+                    android:textSize="15sp"
+                    android:drawableLeft="@drawable/baseline_lock_open_24"
+                    android:drawablePadding="20dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <TextView
+                    android:id="@+id/demerit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Demerit Points"
+                    android:clickable="true"
+                    android:onClick="demeritpoints"
+                    android:textSize="15sp"
+                    android:drawableLeft="@drawable/baseline_thumb_down_off_alt_24"
+                    android:drawablePadding="20dp"
+                    android:layout_marginBottom="30dp"/>
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="2dp"
+
+                android:text="Request"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/reportstatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Report Status"
+                    android:clickable="true"
+                    android:onClick="reportstatus"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:drawableLeft="@drawable/baseline_report_problem_24"
+                    android:drawablePadding="20dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <TextView
+                    android:id="@+id/faq"
+                    android:layout_width="224dp"
+                    android:layout_height="60dp"
+                    android:clickable="true"
+                    android:onClick="faq"
+                    android:drawableLeft="@drawable/baseline_contact_support_24"
+                    android:drawablePadding="20dp"
+                    android:text="Frequently Asked Questions(FAQ) and Rules"
+                    android:textSize="15sp"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- BottomNavigationView fixed at the bottom -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavViewSupplier"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_supplier_nav_menu"
+        tools:ignore="MissingClass" />
+
+</RelativeLayout>
