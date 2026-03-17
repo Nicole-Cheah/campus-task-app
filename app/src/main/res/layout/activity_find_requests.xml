@@ -5,177 +5,211 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="20dp"
     android:background="@android:color/white">
 
     <Button
         android:id="@+id/buttonBackToHomeSupplier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
-        android:layout_margin="16dp"/>
+        android:text="BACK"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="20dp"/>
+
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="30dp"
         android:queryHint="Search for items..."
         app:iconifiedByDefault="false"/>
+
+
+    <TextView
+        android:id="@+id/loc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Locations:"
+        android:textSize="15dp"
+        />
 
     <HorizontalScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <com.google.android.material.chip.ChipGroup
+            app:selectionRequired="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Locations:"
-                android:padding="10dp"/>
+            android:orientation="horizontal"
+            app:singleSelection="true"
+            app:layout_constraintTop_toBottomOf="@id/loc">
 
-            <TextView
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/allLocations"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="all Locations"
+                android:text="All Locations"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="allpostsTapped"
-                android:textColor="@color/purple_500"
-                android:padding="10dp"/>
+                app:chipSpacing= "20dp"
+                tools:checked="true"/>
 
-            <TextView
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonAnywhere"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Anywhere"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="anywhereTapped"
-                android:padding="10dp"/>
+                app:chipSpacing="8dp"/>
 
-            <TextView
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonEastpointMall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Eastpoint Mall"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="eastpointTapped"
                 android:padding="10dp"/>
 
-            <TextView
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonTampinesMall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TampinesMall"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="tampinesTapped"
                 android:padding="10dp"/>
-
-            <TextView
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonCCP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CCP"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="CCPTapped"
                 android:padding="10dp"/>
 
 
-        </LinearLayout>
+        </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/cat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Categories:"
+        android:textSize="15dp"/>
 
     <HorizontalScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <com.google.android.material.chip.ChipGroup
+            app:selectionRequired="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Categories:"/>
+            android:orientation="horizontal"
+            app:singleSelection="true">
 
-            <TextView
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonAllposts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/purple_500"
-                android:text="all posts"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
+                android:text="All Posts"
                 android:onClick="allcatTapped"
-                android:padding="10dp"/>
+                android:padding="10dp"
 
-            <TextView
+                tools:checked="true"/>
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonOthers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Others"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="othersTapped"
                 android:padding="10dp"/>
 
-            <TextView
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonFood"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Food"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="foodTapped"
                 android:padding="10dp"/>
 
-            <TextView
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonBeverages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Beverages"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="beveragesTapped"
                 android:padding="10dp"/>
 
-            <TextView
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonStationery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Stationery and Books"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="stationeryTapped"
                 android:padding="10dp"/>
 
-            <TextView
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonElectronics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Electronics"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="electronicsTapped"
                 android:padding="10dp"/>
-
-            <TextView
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonToiletries"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Toiletries"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="toiletriesTapped"
                 android:padding="10dp"/>
 
-            <TextView
+            <com.google.android.material.chip.Chip
                 android:id="@+id/buttonhealthcare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Healthcare"
-                android:textColor="@color/purple_500"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:background="@drawable/chip_background"
                 android:onClick="healthcareTapped"
                 android:padding="10dp"/>
 
 
-        </LinearLayout>
+        </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRequests"

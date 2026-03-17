@@ -15,23 +15,86 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="20dp">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/oval"
-                android:scaleType="centerCrop"
-                android:src="@drawable/baseline_account_circle_24" />
-
             <Button
+                android:id="@+id/buttonLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LOGOUT"
                 android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
-                android:id="@+id/buttonLogout" />
+                android:layout_marginStart="160dp"
+                android:text="Logout"
+                android:textColor="@color/brown"
+                android:drawableTop="@drawable/logout"
+                android:background="#00FFFFFF">
+
+            </Button>
+
+            <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/oval"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/baseline_account_circle_24" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".DemeritPoints">
+
+                <ProgressBar
+                    android:id="@+id/progressBarContainer"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:max="100"
+                    android:paddingHorizontal="40dp"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/progressbar_container" />
+
+                <!-- Progress Bar -->
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:max="100"
+                    android:paddingHorizontal="40dp"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/custom_progress_bar" />
+
+
+                <!-- Status TextView -->
+                <TextView
+                    android:id="@+id/statusTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textAlignment="center"
+                    android:paddingHorizontal="40dp"
+                    android:text="Good job! Keep it up!"
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <!-- Number TextView -->
+                <TextView
+                    android:id="@+id/number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:text="100"
+                    android:layout_below="@id/progressBar"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="16dp"
+                    />
+
+
+            </RelativeLayout>
+
 
             <TextView
                 android:layout_width="match_parent"
@@ -45,7 +108,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:paddingLeft="20dp"
+                android:padding="20dp"
+                android:paddingRight="20dp">
 
                 <TextView
                     android:id="@+id/telehandle"
@@ -71,17 +136,7 @@
                     android:drawablePadding="20dp"
                     android:layout_marginBottom="20dp"/>
 
-                <TextView
-                    android:id="@+id/demerit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Demerit Points"
-                    android:clickable="true"
-                    android:onClick="demeritpoints"
-                    android:textSize="15sp"
-                    android:drawableLeft="@drawable/baseline_thumb_down_off_alt_24"
-                    android:drawablePadding="20dp"
-                    android:layout_marginBottom="30dp"/>
+
 
             </LinearLayout>
 
@@ -116,7 +171,7 @@
 
                 <TextView
                     android:id="@+id/faq"
-                    android:layout_width="224dp"
+                    android:layout_width="260dp"
                     android:layout_height="60dp"
                     android:clickable="true"
                     android:onClick="faq"
@@ -126,6 +181,8 @@
                     android:textSize="15sp"
                     />
             </LinearLayout>
+
+
 
         </LinearLayout>
     </ScrollView>

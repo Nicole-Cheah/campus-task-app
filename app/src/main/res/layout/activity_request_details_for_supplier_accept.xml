@@ -5,8 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dp"
     tools:context=".supplier.RequestDetailsForSupplierAccept">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="250dp">
+        <ImageView
+            android:id="@+id/postImage"
+            android:layout_width="410dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="0dp"
+            android:scaleType="fitCenter"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonBackToHome"
+            android:background="#00FFFFFF"
+            android:paddingTop="15dp"
+            android:drawableLeft="@drawable/baseline_arrow_back_ios_24"/>
+    </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,11 +35,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BACK"
-                android:id="@+id/buttonBackToHome" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -32,115 +45,194 @@
                 android:gravity="center"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"/>
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/postImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="20dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="REQUESTOR" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/requestorTelegram"
-                android:layout_marginBottom="20dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ITEM" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/itemName"
-                android:layout_marginBottom="20dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DESCRIPTION" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/itemDescription"
-                android:layout_marginBottom="20dp"/>
-
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="IMAGE" />-->
-<!--            <ImageView-->
-<!--                android:id="@+id/postImage"-->
-<!--                android:layout_width="40dp"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:layout_marginBottom="20dp"/>-->
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CATEGORY" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/category"
-                android:layout_marginBottom="20dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="EXPIRY DATE" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/expiryDate"
-                android:layout_marginBottom="20dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="EXPIRY TIME" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/expiryTime"
-                android:layout_marginBottom="20dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="LOCATION" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/location"
-                android:layout_marginBottom="20dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="URGENCY" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/urgency"
-                android:layout_marginBottom="20dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-                <Button
-                    android:layout_width="wrap_content"
+                <TableRow
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ACCEPT"
-                    android:id="@+id/buttonAcceptRequest" />
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="REQUESTOR:"
+                        android:textColor="@color/brown"
+                        android:textStyle="bold"
+                        android:textSize="17dp"
+                        android:paddingLeft="45dp"/>
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:drawable ="@drawable/border">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/requestorTelegram"
+                            android:autoLink="web"
+                            android:clickable="true"
+                            android:textColor="@color/tele"
+                            android:onClick="onTelegramLinkClicked"
+                            android:drawableLeft="@drawable/telegram_black_icon"
+                            android:drawablePadding="10dp"/>
+                    </FrameLayout>
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:text="ITEM:"
+                        android:textColor="@color/brown"
+                        android:textStyle="bold"
+                        android:textSize="17dp"
+                        android:paddingLeft="45dp"/>
+
+                    <TextView
+                        android:id="@+id/itemName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_horizontal"
+                        />
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="180dp"
+                        android:layout_height="match_parent"
+                        android:text="DESCRIPTION:"
+                        android:textColor="@color/brown"
+                        android:textStyle="bold"
+                        android:textSize="17dp"
+                        android:paddingLeft="45dp" />
+
+                    <TextView
+                        android:id="@+id/itemDescription"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:text="CATEGORY:"
+                        android:textColor="@color/brown"
+                        android:textStyle="bold"
+                        android:textSize="17dp"
+                        android:paddingLeft="45dp"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/category"
+                        android:layout_gravity="center"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:text="EXPIRY DATE:"
+                        android:textColor="@color/brown"
+                        android:textStyle="bold"
+                        android:textSize="17dp"
+                        android:paddingLeft="45dp"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:id="@+id/expiryDate" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:text="EXPIRY TIME:"
+                        android:textColor="@color/brown"
+                        android:textStyle="bold"
+                        android:textSize="17dp"
+                        android:paddingLeft="45dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:id="@+id/expiryTime"
+                        />
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="LOCATION:"
+                        android:textColor="@color/brown"
+                        android:textStyle="bold"
+                        android:textSize="17dp"
+                        android:paddingLeft="45dp"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/location"
+                        android:layout_gravity="center"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:text="URGENCY:"
+                        android:textColor="@color/brown"
+                        android:textStyle="bold"
+                        android:textSize="17dp"
+                        android:paddingLeft="45dp"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/urgency"
+                        android:layout_gravity="center"/>
+                </TableRow>
+
+            </TableLayout>
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="ACCEPT"
+                android:textSize="10dp"
+                android:id="@+id/buttonAcceptRequest"
+                android:textColor="@color/white"
+                android:layout_gravity="center"/>
+
             </LinearLayout>
-        </LinearLayout>
+
     </ScrollView>
 </LinearLayout>

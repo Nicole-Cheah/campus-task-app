@@ -4,9 +4,11 @@ package com.example.campuscourier.shared;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,9 +21,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 
@@ -34,6 +38,8 @@ import com.example.campuscourier.requestor.Home;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Profile extends AppCompatActivity {
 
@@ -46,9 +52,39 @@ public class Profile extends AppCompatActivity {
 
         TextView telehandleTextView = findViewById(R.id.telehandle);
         TextView changePasswordTextView = findViewById(R.id.changepassword);
-        TextView demeritPointsTextView = findViewById(R.id.demerit);
+
         TextView reportStatusTextView = findViewById(R.id.reportstatus);
         TextView faqTextView = findViewById(R.id.faq);
+
+
+        String UserId = currentUser.getUid();
+
+        progressBar = findViewById(R.id.progressBar);
+        statusTextView = findViewById(R.id.statusTextView);
+        TextView numberTextView = findViewById(R.id.number);
+
+        // Fetch demerit points from Firestore
+        db.collection("users").document(UserId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Long points = documentSnapshot.getLong("points");
+                        Log.d("did you fetch", "points");
+                        if (points != null) {
+                            demeritPoints = points.intValue();
+                        } else {
+                            demeritPoints = 0; // Default value if points field is null
+                        }
+                        numberTextView.setText(String.valueOf(demeritPoints));
+
+                        // Set progress and update status
+                        progressBar.setProgress(demeritPoints);
+                        updateStatus(); // Call updateStatus method here
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "no points is inside the users field", Toast.LENGTH_SHORT).show();
+                });
+
 
         telehandleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,13 +101,7 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        demeritPointsTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle click for demeritPointsTextView
-                startActivity(new Intent(Profile.this, DemeritPoints.class));
-            }
-        });
+
 
         reportStatusTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +150,35 @@ public class Profile extends AppCompatActivity {
             }
         });
     }
+    private int demeritPoints;
+    private String UserId;
+    private ProgressBar progressBar;
+    private TextView statusTextView;
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    Button buttonBackToProfile;
+
+
+
+    private void updateStatus() {
+        if (demeritPoints >= 100) {
+            statusTextView.setText("Good job! Keep it up!");
+            statusTextView.setTextColor(ContextCompat.getColor(this, android.R.color.holo_purple));
+        } else if (demeritPoints >= 20) {
+            statusTextView.setText("Please try your best to not cause trouble.");
+            statusTextView.setTextColor(ContextCompat.getColor(this, R.color.purple_500));
+        } else if (demeritPoints > 0) {
+            statusTextView.setText("Someone has been naughty. If you reach 0, your account will be disabled. Don't be toxic!");
+            statusTextView.setTextColor(ContextCompat.getColor(this, R.color.purple_700));
+        } else {
+            // Account disabled
+            statusTextView.setText("Your account has been disabled due to toxic behavior.");
+            statusTextView.setTextColor(ContextCompat.getColor(this, android.R.color.black));
+        }
+    }
 }
+
+
 
 

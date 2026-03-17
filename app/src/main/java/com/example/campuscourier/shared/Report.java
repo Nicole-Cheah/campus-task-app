@@ -12,8 +12,10 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.campuscourier.R;
+import com.example.campuscourier.requestor.Home;
 import com.example.campuscourier.requestor.RequestDetails;
 import com.example.campuscourier.shared.Requests_2;
+import com.example.campuscourier.supplier.RequestDetailsForSupplierCancel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
@@ -48,23 +50,29 @@ public class Report extends AppCompatActivity {
         }
     };
 
-    Button buttonSubmit;
+    Button buttonSubmit, buttonBackToRequestDetails;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
+    Requests r;
 
     private EditText InputotherReason, InputId, InputDescription;
 
     List<Chip> chips_list;
 
     List<String> selectedDescriptions;
+    public static final String NEXT_SCREEN = "details_screen";
+    public static final String SUPPPLIERCANCEL_SCREEN = "SUPPPLIERCANCEL_SCREEN";
+    public static final String SUPPLIERACCEPT_SCREEN = "SUPPLIERACCEPT_SCREEN";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "NeutralAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
 
         buttonSubmit = findViewById(R.id.buttonSubmit);
+        buttonBackToRequestDetails = findViewById(R.id.buttonBackToRequestDetails);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
@@ -74,6 +82,10 @@ public class Report extends AppCompatActivity {
         InputId = findViewById(R.id.Reporting_ID);
         InputId.setFilters(new InputFilter[]{blockAtSymbol});
         InputDescription = findViewById(R.id.description_text);
+        if (getIntent().hasExtra(RequestDetails.REPORT_SCREEN)) {
+            // get the Serializable data model class with the details in it
+            r = (Requests) getIntent().getSerializableExtra(RequestDetails.REPORT_SCREEN);
+        }
 
 
         for (int chipId : new int[]{R.id.chip_late, R.id.chip_wrong_item, R.id.chip_no_show, R.id.chip_payment_amount, R.id.chip_others}) {
@@ -107,6 +119,30 @@ public class Report extends AppCompatActivity {
             });
         }
 
+        buttonBackToRequestDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Objects.equals(getIntent().getStringExtra("activity"), "RequestDetails")){
+                    Intent intent = new Intent(getApplicationContext(), RequestDetails.class);
+                    intent.putExtra(NEXT_SCREEN, r);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(Objects.equals(getIntent().getStringExtra("activity"), "RequestDetailsForSupplierCancel")){
+                    Intent intent = new Intent(getApplicationContext(), RequestDetailsForSupplierCancel.class);
+                    intent.putExtra(SUPPPLIERCANCEL_SCREEN, r);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    Intent intent = new Intent(getApplicationContext(), RequestDetails.class);
+                    intent.putExtra(NEXT_SCREEN, r);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,18 +154,12 @@ public class Report extends AppCompatActivity {
                     Toast.makeText(Report.this,"Please fill up all fields",Toast.LENGTH_SHORT).show();
                 }
                 else if (!selectedDescriptions.contains("Others")){
-//                    Intent intent = new Intent(getApplicationContext(), RequestDetails.class);
-//                    startActivity(intent);
-//                    finish();
                     addReportToFirestore(userId,Report_ID, Description,OtherReason, selectedDescriptions);
                 }
                 else if (TextUtils.isEmpty(OtherReason.toString().trim())) {
                     Toast.makeText(Report.this,"Please fill up other reason for reporting",Toast.LENGTH_SHORT).show();
                 }
                 else{
-//                    Intent intent = new Intent(getApplicationContext(), RequestDetails.class);
-//                    startActivity(intent);
-//                    finish();
                     addReportToFirestore(userId, Report_ID, Description,OtherReason, selectedDescriptions);
                 }
 
@@ -170,34 +200,6 @@ public class Report extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Report not created", Toast.LENGTH_SHORT).show();
             }
         });
-
-//            @Override
-//            public void onSuccess(DocumentReference documentReference) {
-//                // after the data addition is successful
-//                // we are displaying a success toast message.
-//                Toast.makeText(getApplicationContext(), "Report created.", Toast.LENGTH_SHORT).show();
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                // this method is called when the data addition process is failed.
-//                // displaying a toast message when data addition is failed.
-//                Toast.makeText(getApplicationContext(), "Report not created", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        db.collection("report").document(docId).set(r).addOnSuccessListener(new OnSuccessListener<Void>() {
-//            @Override
-//            public void onSuccess(Void unused) {
-//                Log.d("NEW REPORT", "report stored");
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.w("NEW REPORT", "report not stored", e);
-//            }
-//        });
-
-
     }
 
 

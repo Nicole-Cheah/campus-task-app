@@ -7,40 +7,34 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 
 import com.example.campuscourier.R;
+import com.example.campuscourier.admin.AdminAdaptor;
 import com.example.campuscourier.shared.Login;
 import com.example.campuscourier.shared.Requests_2;
 import com.example.campuscourier.shared.FirebaseHelper;
-import com.example.campuscourier.shared.ReportAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
 public class Admin_Home extends AppCompatActivity {
 
-    Button buttonLogout,buttonAccept,buttonDecline;
-    RecyclerView rvAdmin;
-    ArrayList<Requests_2> AdminArrayList;
-    AdminAdaptor AdminAdapter;
-
+    private Button logoutButton;
+    private RecyclerView recyclerViewAdmin;
+    private ArrayList<Requests_2> adminArrayList;
+    private AdminAdaptor adminAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
 
-        rvAdmin = findViewById(R.id.rvAdmin);
-        AdminArrayList = new ArrayList<>();
-        rvAdmin.setHasFixedSize(true);
-        rvAdmin.setLayoutManager(new LinearLayoutManager(this));
-        AdminAdapter = new AdminAdaptor(AdminArrayList, this );
-        rvAdmin.setAdapter(AdminAdapter);
-        FirebaseHelper.getReportAdmin(AdminArrayList, AdminAdapter);
-        buttonLogout = findViewById(R.id.buttonLogout);
-        buttonLogout.setOnClickListener(new View.OnClickListener() {
+        initializeViews();
+        setupRecyclerView();
+        setupFirebaseHelper();
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
@@ -49,5 +43,22 @@ public class Admin_Home extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void initializeViews() {
+        recyclerViewAdmin = findViewById(R.id.rvAdmin);
+        logoutButton = findViewById(R.id.buttonLogout);
+    }
+
+    private void setupRecyclerView() {
+        adminArrayList = new ArrayList<>();
+        recyclerViewAdmin.setHasFixedSize(true);
+        recyclerViewAdmin.setLayoutManager(new LinearLayoutManager(this));
+        adminAdapter = new AdminAdaptor(adminArrayList, this);
+        recyclerViewAdmin.setAdapter(adminAdapter);
+    }
+
+    private void setupFirebaseHelper() {
+        FirebaseHelper.getReportAdmin(adminArrayList, adminAdapter);
     }
 }

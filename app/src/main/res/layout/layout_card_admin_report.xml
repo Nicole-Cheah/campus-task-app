@@ -12,7 +12,7 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="25dp">
 
         <TableRow>
             <TextView
@@ -46,7 +46,9 @@
                 android:text="detail"
                 android:textSize="10sp"
                 android:layout_marginStart="50dp"
-                android:paddingBottom="10dp"/>
+                android:paddingBottom="10dp"
+                android:singleLine="false"
+                android:maxWidth="50dp"/>
         </TableRow>
 
         <TableRow>
@@ -67,7 +69,9 @@
                 android:text="why"
                 android:textSize="10sp"
                 android:layout_marginStart="50dp"
-                android:paddingBottom="10dp"/>
+                android:paddingBottom="10dp"
+                android:singleLine="false"
+                android:maxWidth="50dp"/>
         </TableRow>
 
         <TableRow>
@@ -123,7 +127,8 @@
                 android:layout_height="wrap_content"
                 android:text="Accept"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp" />
+                android:layout_marginTop="12dp"
+                android:textColor="@color/white"/>
 
             <Button
                 android:id="@+id/buttonDecline"
@@ -131,7 +136,8 @@
                 android:layout_height="wrap_content"
                 android:text="Decline"
                 android:layout_marginStart="60dp"
-                android:layout_marginTop="12dp" />
+                android:layout_marginTop="12dp"
+                android:textColor="@color/white"/>
         </TableRow>
 
 

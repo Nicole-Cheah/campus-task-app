@@ -26,6 +26,7 @@ public class FAQ_n_Rules extends AppCompatActivity {
     Button buttonBackToProfile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "NeutralAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faq_nrules);
 

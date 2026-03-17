@@ -10,8 +10,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BACK"
-        android:id="@+id/buttonBackToProfile" />
+        android:text="Back to Profile"
+        android:textColor="@color/brown"
+        android:textSize="15dp"
+        android:id="@+id/buttonBackToProfile"
+        android:background="#00FFFFFF"
+        android:paddingTop="15dp"
+        android:drawableLeft="@drawable/baseline_arrow_back_ios_24"/>
 
     <!-- Change Telegram Handle Title -->
     <TextView
@@ -54,6 +59,7 @@
         android:layout_below="@id/newHandleLayout"
         android:layout_centerHorizontal="true"
         android:text="Save New Handle"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"/>
 
 </RelativeLayout>

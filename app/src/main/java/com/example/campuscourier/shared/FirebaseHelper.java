@@ -32,36 +32,6 @@ public class FirebaseHelper {
     static FirebaseStorage storage = FirebaseStorage.getInstance();
     static String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
-//    public static void getPosts(ArrayList<Requests> requestsArrayList, RequestAdapter requestAdapter){
-//        db.collection("users").document(userId).collection("posts").get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        // after getting the data we are calling on success method
-//                        // and inside this method we are checking if the received
-//                        // query snapshot is empty or not.
-//                        if (!queryDocumentSnapshots.isEmpty()) {
-//                            // if the snapshot is not empty we are
-//                            // hiding our progress bar and adding
-//                            // our data in a list.
-//                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-//                            for (DocumentSnapshot d : list) {
-//                                // after getting this list we are passing
-//                                // that list to our object class.
-//                                Requests r = d.toObject(Requests.class);
-//                                // and we will pass this object class
-//                                // inside our arraylist which we have
-//                                // created for recycler view.
-//                                requestsArrayList.add(r);
-//                            }
-//                            // after adding the data to recycler view.
-//                            // we are calling recycler view notifyDataSetChanged
-//                            // method to notify that data has been changed in recycler view.
-//                            requestAdapter.notifyDataSetChanged();
-//                        }
-//                    }
-//                });
-//    }
 
     public static void getPosts(ArrayList<Requests> requestsArrayList, RequestAdapter requestAdapter){
         db.collection("users").document(userId).collection("posts").whereNotEqualTo("status","Delivered").get()
@@ -94,7 +64,7 @@ public class FirebaseHelper {
                 });
     }
 
-    public static void getNotAcceptedPosts(ArrayList<Requests> requestsArrayList, RequestAdapter requestAdapter){
+    public static void getNotAcceptedPosts(ArrayList<Requests> NotAcceptedList, RequestAdapter requestAdapter){
         db.collection("posts").whereEqualTo("status", "Not Accepted").orderBy("urgency", Query.Direction.DESCENDING).orderBy("date", Query.Direction.ASCENDING).orderBy("time", Query.Direction.ASCENDING).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -103,7 +73,7 @@ public class FirebaseHelper {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 Requests r = d.toObject(Requests.class);
-                                requestsArrayList.add(r);
+                                NotAcceptedList.add(r);
                             }
                             requestAdapter.notifyDataSetChanged();
                         }
@@ -111,24 +81,8 @@ public class FirebaseHelper {
                 });
     }
 
-//    public static void getToDoPosts(ArrayList<Requests> requestsArrayList, CheckboxAdapter requestAdapter){
-//        db.collection("users").document(userId).collection("todo").get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        if (!queryDocumentSnapshots.isEmpty()) {
-//                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-//                            for (DocumentSnapshot d : list) {
-//                                Requests r = d.toObject(Requests.class);
-//                                requestsArrayList.add(r);
-//                            }
-//                            requestAdapter.notifyDataSetChanged();
-//                        }
-//                    }
-//                });
-//    }
 
-    public static void getToDoPosts(ArrayList<Requests> requestsArrayList, CheckboxAdapter requestAdapter){
+    public static void getToDoPosts(ArrayList<Requests> ToDoList, CheckboxAdapter requestAdapter){
         db.collection("users").document(userId).collection("todo").whereNotEqualTo("status","Delivered").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -137,7 +91,7 @@ public class FirebaseHelper {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 Requests r = d.toObject(Requests.class);
-                                requestsArrayList.add(r);
+                                ToDoList.add(r);
                             }
                             requestAdapter.notifyDataSetChanged();
                         }
@@ -145,7 +99,7 @@ public class FirebaseHelper {
                 });
     }
 
-    public static void getRHistoryPosts(ArrayList<Requests> requestsArrayList, RequestAdapter requestAdapter){
+    public static void getRHistoryPosts(ArrayList<Requests> RHistoryList, RequestAdapter requestAdapter){
         db.collection("users").document(userId).collection("posts").whereEqualTo("status", "Delivered").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -154,14 +108,14 @@ public class FirebaseHelper {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 Requests r = d.toObject(Requests.class);
-                                requestsArrayList.add(r);
+                                RHistoryList.add(r);
                             }
                             requestAdapter.notifyDataSetChanged();
                         }
                     }
                 });
     }
-    public static void getSHistoryPosts(ArrayList<Requests> requestsArrayList, RequestAdapter requestAdapter){
+    public static void getSHistoryPosts(ArrayList<Requests> SHistoryList, RequestAdapter requestAdapter){
         db.collection("users").document(userId).collection("todo").whereEqualTo("status", "Delivered").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -170,7 +124,7 @@ public class FirebaseHelper {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 Requests r = d.toObject(Requests.class);
-                                requestsArrayList.add(r);
+                                SHistoryList.add(r);
                             }
                             requestAdapter.notifyDataSetChanged();
                         }
@@ -195,41 +149,29 @@ public class FirebaseHelper {
         });
     }
 
-    public static void getReport(ArrayList<Requests_2> requestsArrayList, ReportAdapter reportAdapter){
+    public static void getReport(ArrayList<Requests_2> ReportArrayList, ReportAdapter reportAdapter){
         db.collection("users").document(userId).collection("report").whereEqualTo("userId",userId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                // after getting the data we are calling on success method                    // and inside this method we are checking if the received
-                // query snapshot is empty or not.
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 if (!queryDocumentSnapshots.isEmpty()) {
-                // if the snapshot is not empty we are                        // hiding our progress bar and adding
-                // our data in a list.
                     List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-                    for (DocumentSnapshot d : list) {                            // after getting this list we are passing
-                    // that list to our object class.
+                    for (DocumentSnapshot d : list) {
                         Requests_2 r = d.toObject(Requests_2.class);
-                    // and we will pass this object class                            // inside our arraylist which we have
-                    // created for recycler view.
-                        requestsArrayList.add(r);
-                }                        // after adding the data to recycler view.
-                // we are calling recycler view notifyDataSetChanged                        // method to notify that data has been changed in recycler view.
+                        ReportArrayList.add(r);
+                }
                 reportAdapter.notifyDataSetChanged();
             }}});
 }
     public static void getReportAdmin(ArrayList<Requests_2> AdminArrayList, AdminAdaptor AdminAdapter){
         db.collection("report").get()
-            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {                @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {                    // after getting the data we are calling on success method
-                // and inside this method we are checking if the received                    // query snapshot is empty or not.
-                if (!queryDocumentSnapshots.isEmpty()) {                        // if the snapshot is not empty we are
-                    // hiding our progress bar and adding                        // our data in a list.
+            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (!queryDocumentSnapshots.isEmpty()) {
                     List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                     for (DocumentSnapshot d : list) {
-                        // after getting this list we are passing                            // that list to our object class.
-                        Requests_2 r = d.toObject(Requests_2.class);                            // and we will pass this object class
-                        // inside our arraylist which we have                            // created for recycler view.
+                        Requests_2 r = d.toObject(Requests_2.class);
                         AdminArrayList.add(r);                        }
-                    // after adding the data to recycler view.                        // we are calling recycler view notifyDataSetChanged
-                    // method to notify that data has been changed in recycler view.
                     AdminAdapter.notifyDataSetChanged();
                 }                }
             });}
@@ -260,7 +202,7 @@ public class FirebaseHelper {
         db.collection("users").document(userId).collection("posts").document(docId).set(r).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(MyApplication.getAppContext(), "Request posted.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MyApplication.getAppContext(), "Request posted.", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

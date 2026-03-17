@@ -3,9 +3,11 @@ package com.example.campuscourier.requestor;
 import static androidx.fragment.app.FragmentManager.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 import com.example.campuscourier.R;
 import com.example.campuscourier.shared.FirebaseHelper;
 import com.example.campuscourier.shared.MyApplication;
+import com.example.campuscourier.shared.ThemeManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -53,6 +56,7 @@ public class AddRequest extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "ReqAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_request);
 
@@ -65,6 +69,7 @@ public class AddRequest extends AppCompatActivity {
         buttonAddImage = findViewById(R.id.buttonAddImage);
         buttonRemoveImage = findViewById(R.id.buttonRemoveImage);
         imageView = findViewById(R.id.image);
+        imageView.setImageResource(R.drawable.image);
         datePicker = findViewById(R.id.date);
         timePicker = findViewById(R.id.time);
         timePicker.setIs24HourView(true);
@@ -93,7 +98,7 @@ public class AddRequest extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (null != selectedImageUri) {
-                    imageView.setImageDrawable(null);
+                    imageView.setImageResource(R.drawable.image);
                 }
             }
         });
@@ -162,14 +167,23 @@ public class AddRequest extends AppCompatActivity {
                         }
                     });
                     FirebaseHelper.addDataToFirestore(item, description, imageUri, imageStorageUri, date, time, location, urgency, status, userId, supplierId, category);
-                }
-                else{
+                } else{
                     FirebaseHelper.addDataToFirestore(item, description, imageUri, imageStorageUri, date, time, location, urgency, status, userId, supplierId, category);
-                    Intent intent = new Intent(getApplicationContext(), Home.class);
-                    startActivity(intent);
-                    finish();
                 }
-            }
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddRequest.this);
+                builder.setTitle("Notice");
+                builder.setMessage("Normal requests require an additional $1.50 fee to be paid to the supplier. Urgent requests require an additional $3.00 fee to be paid to the supplier.");
+                builder.setPositiveButton("I will pay the fee.", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(getApplicationContext(), Home.class);
+                        startActivity(intent);
+                        Toast.makeText(MyApplication.getAppContext(), "Request posted.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+            });
+                builder.show();
+        }
         });
     }
 

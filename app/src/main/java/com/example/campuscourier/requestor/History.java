@@ -13,6 +13,7 @@ import com.example.campuscourier.R;
 import com.example.campuscourier.shared.FirebaseHelper;
 import com.example.campuscourier.shared.RequestAdapter;
 import com.example.campuscourier.shared.Requests;
+import com.example.campuscourier.shared.ThemeManager;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -22,23 +23,25 @@ public class History extends AppCompatActivity {
     Button buttonHome;
 
     RecyclerView rvRequests;
-    ArrayList<Requests> requestsArrayList;
+    ArrayList<Requests> RHistoryList;
     RequestAdapter requestAdapter;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "ReqAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
         rvRequests = findViewById(R.id.rvRequests);
 
         // creating our new array list
-        requestsArrayList = new ArrayList<>();
+        RHistoryList = new ArrayList<>();
         rvRequests.setHasFixedSize(true);
         rvRequests.setLayoutManager(new LinearLayoutManager(this));
         // adding our array list to our recycler view adapter class.
-        requestAdapter = new RequestAdapter(requestsArrayList, this);
+        requestAdapter = new RequestAdapter(RHistoryList, this);
         // setting adapter to our recycler view.
         rvRequests.setAdapter(requestAdapter);
         requestAdapter.setOnClickListener(new RequestAdapter.OnClickListener() {
@@ -53,7 +56,7 @@ public class History extends AppCompatActivity {
             }
         });
 
-        FirebaseHelper.getRHistoryPosts(requestsArrayList, requestAdapter);
+        FirebaseHelper.getRHistoryPosts(RHistoryList, requestAdapter);
 
         buttonHome = findViewById(R.id.buttonHome);
         buttonHome.setOnClickListener(new View.OnClickListener() {

@@ -26,6 +26,7 @@ import com.example.campuscourier.R;
 import com.example.campuscourier.shared.MyApplication;
 import com.example.campuscourier.shared.Requests;
 import com.example.campuscourier.shared.FirebaseHelper;
+import com.example.campuscourier.shared.ThemeManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -55,10 +56,12 @@ public class EditRequestDetails extends AppCompatActivity {
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
     StorageReference storageRef;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
+    public static final String NEXT_SCREEN = "details_screen";
     Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "ReqAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_request_details);
 
@@ -71,6 +74,7 @@ public class EditRequestDetails extends AppCompatActivity {
         buttonAddImage = findViewById(R.id.buttonAddImage);
         buttonRemoveImage = findViewById(R.id.buttonRemoveImage);
         imageView = findViewById(R.id.image);
+        imageView.setImageResource(R.drawable.image);
         datePicker = findViewById(R.id.date);
         timePicker = findViewById(R.id.time);
         timePicker.setIs24HourView(true);
@@ -98,6 +102,7 @@ public class EditRequestDetails extends AppCompatActivity {
         }
         if (r != null) {
             inputItem.setText(r.getItem());
+            inputCategory.setSelection(adapterCategory.getPosition(r.getCategory()));
             inputDescription.setText(r.getDescription());
             if(!Objects.equals(r.getImageStorageUri(), "")){
                 StorageReference ref = storage.getReferenceFromUrl(r.getImageStorageUri());
@@ -131,7 +136,7 @@ public class EditRequestDetails extends AppCompatActivity {
         buttonRemoveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageView.setImageDrawable(null);
+                imageView.setImageResource(R.drawable.image);
             }
         });
 
@@ -139,7 +144,7 @@ public class EditRequestDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String item, description, date, time, location, urgency, imageUri, imageStorageUri;
+                String item, description, date, time, location, urgency, imageUri, imageStorageUri, category;
 
                 item = String.valueOf(inputItem.getText());
                 description = String.valueOf(inputDescription.getText());
@@ -147,6 +152,7 @@ public class EditRequestDetails extends AppCompatActivity {
                 time = format(timePicker.getHour())+format(timePicker.getMinute());
                 location = String.valueOf(inputLocation.getSelectedItem());
                 urgency = String.valueOf(inputUrgency.getSelectedItem());
+                category = String.valueOf(inputCategory.getSelectedItem());
 
                 if (TextUtils.isEmpty(item)){
                     Toast.makeText(getApplicationContext(), "Enter item", Toast.LENGTH_SHORT).show();
@@ -170,6 +176,9 @@ public class EditRequestDetails extends AppCompatActivity {
 
                 db.collection("users").document(r.getUserId()).collection("posts").document(r.getDocId()).update("urgency", urgency);
                 db.collection("posts").document(r.getDocId()).update("urgency", urgency);
+
+                db.collection("users").document(r.getUserId()).collection("posts").document(r.getDocId()).update("category", category);
+                db.collection("posts").document(r.getDocId()).update("category", category);
 
                 imageView.setDrawingCacheEnabled(true);
                 imageView.buildDrawingCache();
@@ -224,6 +233,7 @@ public class EditRequestDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), RequestDetails.class);
+                intent.putExtra(NEXT_SCREEN, r);
                 startActivity(intent);
                 finish();
             }

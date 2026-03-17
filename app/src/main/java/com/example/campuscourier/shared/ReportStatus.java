@@ -20,23 +20,24 @@ public class ReportStatus extends AppCompatActivity {
 
     Button buttonBackToProfile;
     RecyclerView rvReport;
-    ArrayList<Requests_2> reportArrayList;
+    ArrayList<Requests_2> ReportArrayList;
     ReportAdapter reportAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "NeutralAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_status);
 
 
         rvReport = findViewById(R.id.rvReport);
-        reportArrayList = new ArrayList<>();
+        ReportArrayList = new ArrayList<>();
         rvReport.setHasFixedSize(true);
         rvReport.setLayoutManager(new LinearLayoutManager(this));
-        reportAdapter = new ReportAdapter(reportArrayList, this);
+        reportAdapter = new ReportAdapter(ReportArrayList, this);
         rvReport.setAdapter(reportAdapter);
-        FirebaseHelper.getReport(reportArrayList, reportAdapter);
+        FirebaseHelper.getReport(ReportArrayList, reportAdapter);
         buttonBackToProfile = findViewById(R.id.buttonBackToProfile);
 
         buttonBackToProfile.setOnClickListener(new View.OnClickListener() {

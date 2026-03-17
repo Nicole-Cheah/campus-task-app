@@ -6,6 +6,15 @@
     android:paddingHorizontal="50dp"
     android:paddingVertical="100dp">
 
+    <Button
+        android:id="@+id/buttonBackToRequestDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"/>
 
     <TextView
         android:id="@+id/Report_heading"
@@ -18,9 +27,9 @@
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.396"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/buttonBackToRequestDetails"
+        />
 
     <EditText
         android:id="@+id/Reporting_ID"
@@ -28,6 +37,7 @@
         android:layout_height="wrap_content"
         android:hint="Enter Telegram Handle"
         android:layout_marginTop="50dp"
+        android:textColor="@color/brown"
         app:layout_constraintTop_toBottomOf="@id/Report_heading"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -97,6 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:textColor="@color/brown"
         android:hint="Enter Details For Others"
         app:layout_constraintTop_toBottomOf="@id/chipGroup"/>
 
@@ -111,6 +122,7 @@
 
     <EditText
         android:id="@+id/description_text"
+        android:textColor="@color/brown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Reason For Reporting"
@@ -124,6 +136,7 @@
         app:layout_constraintTop_toBottomOf="@id/description_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

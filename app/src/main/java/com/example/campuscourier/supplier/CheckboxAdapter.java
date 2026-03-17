@@ -33,13 +33,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.ViewHolder> {
-    // creating variables for our ArrayList and context
-    Requests r;
     private ArrayList<Requests> requestsArrayList;
     private Context context;
     private SharedPreferences sharedPref;
     private OnClickListener onClickListener;
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -124,14 +121,12 @@ public class CheckboxAdapter extends RecyclerView.Adapter<CheckboxAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
         public Requests r;
         public Object id;
-        // creating variables for our text views.
         private ImageView postImage;
         private CheckBox checkBox;
         private TextView requestedItem, itemLocation, itemStatus, requestDate, requestTime, uid;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // initializing our text views.
             postImage = itemView.findViewById(R.id.postImage);
             requestedItem = itemView.findViewById(R.id.requestedItem);
             itemLocation = itemView.findViewById(R.id.itemLocation);

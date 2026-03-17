@@ -7,7 +7,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +23,7 @@ import com.example.campuscourier.R;
 import com.example.campuscourier.requestor.Home;
 import com.example.campuscourier.shared.FirebaseHelper;
 import com.example.campuscourier.shared.Requests;
+import com.example.campuscourier.shared.ThemeManager;
 import com.example.campuscourier.shared.Users;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,12 +50,14 @@ public class RequestDetailsForSupplierAccept extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "SupAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_details_for_supplier_accept);
         requestorTelegram = findViewById(R.id.requestorTelegram);
         itemName = findViewById(R.id.itemName);
         itemDescription = findViewById(R.id.itemDescription);
         image = findViewById(R.id.postImage);
+        image.setImageResource(R.drawable.image);
         expiryDate = findViewById(R.id.expiryDate);
         expiryTime = findViewById(R.id.expiryTime);
         location = findViewById(R.id.location);
@@ -68,6 +76,18 @@ public class RequestDetailsForSupplierAccept extends AppCompatActivity {
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     Users u = documentSnapshot.toObject(Users.class);
                     requestorTelegram.setText(u.getTelegram());
+                    SpannableString spannableSupplier = new SpannableString(requestorTelegram.getText());
+                    ClickableSpan clickableSpan = new ClickableSpan() {
+                        @Override
+                        public void onClick(@NonNull View widget) {
+                            // Define the action to take when the Telegram username is clicked
+                            String username = requestorTelegram.getText().toString();
+                            openTelegram(username);
+                        }
+                    };
+                    spannableSupplier.setSpan(clickableSpan, 0, spannableSupplier.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    requestorTelegram.setText(spannableSupplier);
+                    requestorTelegram.setMovementMethod(LinkMovementMethod.getInstance()); // Enable clickable links in TextView
                 }
             });
 
@@ -92,6 +112,7 @@ public class RequestDetailsForSupplierAccept extends AppCompatActivity {
                     public void onFailure(@NonNull Exception exception) {
                         // Handle any errors
                         Log.d("IMAGE", "image not shown");
+                        image.setImageResource(R.drawable.image);
                     }});}
         }
 
@@ -123,5 +144,11 @@ public class RequestDetailsForSupplierAccept extends AppCompatActivity {
                 finish();
             }
         });
+
+    }
+    private void openTelegram(String username) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://t.me/" + username));
+        startActivity(intent);
     }
 }

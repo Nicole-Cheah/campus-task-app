@@ -8,7 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +28,7 @@ import com.example.campuscourier.shared.CheckCompleted;
 import com.example.campuscourier.shared.FirebaseHelper;
 import com.example.campuscourier.shared.Report;
 import com.example.campuscourier.shared.Requests;
+import com.example.campuscourier.shared.ThemeManager;
 import com.example.campuscourier.shared.Users;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,18 +47,21 @@ public class RequestDetails extends AppCompatActivity {
     ImageView image;
     Button buttonEditRequest, buttonBackToHome, buttonDeleteRequest, buttonReport, buttonSupplierCompleted;
     public static final String NEXT_SCREEN = "edit_details_screen";
+    public static final String REPORT_SCREEN = "report_screen";
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
     CheckCompleted checkCompleted = new CheckCompleted();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "ReqAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_details);
         supplierTelegram = findViewById(R.id.supplierTelegram);
         itemName = findViewById(R.id.itemName);
         itemDescription = findViewById(R.id.itemDescription);
         image = findViewById(R.id.postImage);
+        image.setImageResource(R.drawable.image);
         expiryDate = findViewById(R.id.expiryDate);
         expiryTime = findViewById(R.id.expiryTime);
         location = findViewById(R.id.location);
@@ -66,6 +75,16 @@ public class RequestDetails extends AppCompatActivity {
         if (getIntent().hasExtra(Home.NEXT_SCREEN)) {
             // get the Serializable data model class with the details in it
             r = (Requests) getIntent().getSerializableExtra(Home.NEXT_SCREEN);
+            Log.d("INFO TRANSFERRED", "FROM HOME");
+        }
+        if (getIntent().hasExtra(Report.NEXT_SCREEN)) {
+            // get the Serializable data model class with the details in it
+            r = (Requests) getIntent().getSerializableExtra(Report.NEXT_SCREEN);
+            Log.d("INFO TRANSFERRED", "FROM REPORT");
+        }
+        if (getIntent().hasExtra(EditRequestDetails.NEXT_SCREEN)) {
+            // get the Serializable data model class with the details in it
+            r = (Requests) getIntent().getSerializableExtra(EditRequestDetails.NEXT_SCREEN);
         }
         if (r != null) {
 
@@ -76,6 +95,18 @@ public class RequestDetails extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Users u = documentSnapshot.toObject(Users.class);
                         supplierTelegram.setText(u.getTelegram());
+                        SpannableString spannableSupplier = new SpannableString(supplierTelegram.getText());
+                        ClickableSpan clickableSpan = new ClickableSpan() {
+                            @Override
+                            public void onClick(@NonNull View widget) {
+                                // Define the action to take when the Telegram username is clicked
+                                String username = supplierTelegram.getText().toString();
+                                openTelegram(username);
+                            }
+                        };
+                        spannableSupplier.setSpan(clickableSpan, 0, spannableSupplier.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        supplierTelegram.setText(spannableSupplier);
+                        supplierTelegram.setMovementMethod(LinkMovementMethod.getInstance()); // Enable clickable links in TextView
                     }
                 });
             }
@@ -105,6 +136,7 @@ public class RequestDetails extends AppCompatActivity {
                     public void onFailure(@NonNull Exception exception) {
                         // Handle any errors
                         Log.d("IMAGE", "image not shown");
+                        image.setImageResource(R.drawable.image);
                     }});}
         }
 
@@ -174,5 +206,11 @@ public class RequestDetails extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void openTelegram(String username) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://t.me/" + username));
+        startActivity(intent);
     }
 }

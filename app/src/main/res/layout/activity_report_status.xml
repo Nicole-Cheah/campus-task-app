@@ -18,10 +18,15 @@
 
             <!-- Back Button -->
             <Button
-                android:id="@+id/buttonBackToProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="BACK" />
+                android:text="Back to Profile"
+                android:textColor="@color/brown"
+                android:textSize="15dp"
+                android:id="@+id/buttonBackToProfile"
+                android:background="#00FFFFFF"
+                android:paddingTop="15dp"
+                android:drawableLeft="@drawable/baseline_arrow_back_ios_24"/>
 
             <!-- RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView

@@ -17,6 +17,7 @@ import com.example.campuscourier.requestor.Home;
 import com.example.campuscourier.shared.FirebaseHelper;
 import com.example.campuscourier.shared.RequestAdapter;
 import com.example.campuscourier.shared.Requests;
+import com.example.campuscourier.shared.ThemeManager;
 
 import java.util.ArrayList;
 
@@ -25,13 +26,14 @@ public class FindRequests extends AppCompatActivity {
     SearchView searchView;
     Button backToHomeSupplier;
     RecyclerView rvRequests;
-    ArrayList<Requests> requestsArrayList;
+    ArrayList<Requests> NotAcceptedList;
     RequestAdapter requestAdapter;
-    String selectedFilterLocation = "all";
-    String selectedFilterCategory = "all posts";
+    String selectedFilterLocation = "All Location";
+    String selectedFilterCategory = "All Posts";
     public static final String NEXT_SCREEN = "details_for_supplier_accept_screen";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "SupAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_requests);
 
@@ -39,12 +41,12 @@ public class FindRequests extends AppCompatActivity {
         rvRequests = findViewById(R.id.rvRequests);
         searchView.clearFocus();
 
-        requestsArrayList = new ArrayList<>();
+        NotAcceptedList = new ArrayList<>();
         rvRequests.setHasFixedSize(true);
         rvRequests.setLayoutManager(new LinearLayoutManager(this));
-        requestAdapter = new RequestAdapter(requestsArrayList, this);
+        requestAdapter = new RequestAdapter(NotAcceptedList, this);
         rvRequests.setAdapter(requestAdapter);
-        FirebaseHelper.getNotAcceptedPosts(requestsArrayList, requestAdapter);
+        FirebaseHelper.getNotAcceptedPosts(NotAcceptedList, requestAdapter);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -82,7 +84,7 @@ public class FindRequests extends AppCompatActivity {
 
     public void searchList(String text) {
         ArrayList<Requests> searchList = new ArrayList<>();
-        for (Requests request : requestsArrayList) {
+        for (Requests request : NotAcceptedList) {
             if (request.getItem().toLowerCase().contains(text.toLowerCase())) {
                 searchList.add(request);
             }
@@ -91,19 +93,18 @@ public class FindRequests extends AppCompatActivity {
         requestAdapter.searchRequestsArrayList(searchList);
 
     }
-
     public void filterLocation(String loc){
         selectedFilterLocation = loc;
         ArrayList<Requests> locationList = new ArrayList<>();
-        if (selectedFilterCategory.equals("all posts")){
-            for (Requests request : requestsArrayList) {
+        if (selectedFilterCategory.equals("All Posts")){
+            for (Requests request : NotAcceptedList) {
                 if (request.getLocation().contains(loc)) {
                     locationList.add(request);
                 }
             }
         }else{
             ArrayList<Requests> CategoryList = new ArrayList<>();
-            for (Requests request : requestsArrayList) {
+            for (Requests request : NotAcceptedList) {
                 if (request.getCategory().contains(selectedFilterCategory)) {
                     CategoryList.add(request);
                 }
@@ -120,15 +121,15 @@ public class FindRequests extends AppCompatActivity {
     public void filterCategory(String cat){
         selectedFilterCategory = cat;
         ArrayList<Requests> CategoryList = new ArrayList<>();
-        if (selectedFilterLocation.equals("all Locations")) {
-            for (Requests request : requestsArrayList) {
+        if (selectedFilterLocation.equals("All Locations")) {
+            for (Requests request : NotAcceptedList) {
                 if (request.getCategory().contains(cat)) {
                     CategoryList.add(request);
                 }
             }
         }else{
             ArrayList<Requests> locationList = new ArrayList<>();
-            for (Requests request : requestsArrayList) {
+            for (Requests request : NotAcceptedList) {
                 if (request.getLocation().contains(selectedFilterLocation)) {
                     locationList.add(request);
                 }
@@ -143,9 +144,8 @@ public class FindRequests extends AppCompatActivity {
     }
 
     public void allpostsTapped(View view){
-        selectedFilterLocation = "all Locations";
-
-        ArrayList<Requests> locationList = new ArrayList<>(requestsArrayList);
+        selectedFilterLocation = "All Locations";
+        ArrayList<Requests> locationList = new ArrayList<>(NotAcceptedList);
         requestAdapter.searchRequestsArrayList(locationList);
 
     }
@@ -169,8 +169,8 @@ public class FindRequests extends AppCompatActivity {
     }
 
     public void allcatTapped(View view){
-        selectedFilterCategory ="all posts";
-        ArrayList<Requests> CategoryList = new ArrayList<>(requestsArrayList);
+        selectedFilterCategory ="All Posts";
+        ArrayList<Requests> CategoryList = new ArrayList<>(NotAcceptedList);
         requestAdapter.searchRequestsArrayList(CategoryList);
 
     }

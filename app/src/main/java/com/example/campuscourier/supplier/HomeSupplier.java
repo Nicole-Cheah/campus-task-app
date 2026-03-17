@@ -14,19 +14,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.campuscourier.R;
-import com.example.campuscourier.requestor.AddRequest;
-import com.example.campuscourier.requestor.History;
 import com.example.campuscourier.requestor.Home;
 import com.example.campuscourier.shared.FirebaseHelper;
-import com.example.campuscourier.shared.Login;
-import com.example.campuscourier.shared.Profile;
 import com.example.campuscourier.shared.Requests;
+import com.example.campuscourier.shared.ThemeManager;
 import com.example.campuscourier.shared.Users;
-import com.example.campuscourier.supplier.CheckboxAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -50,7 +45,7 @@ public class HomeSupplier extends AppCompatActivity {
     Requests r;
     RecyclerView rvRequests;
     TextView name, number;
-    ArrayList<Requests> requestsArrayList;
+    ArrayList<Requests> ToDoList;
     CheckboxAdapter checkboxAdapter;
     public static final String NEXT_SCREEN = "details_for_supplier_cancel_screen";
     static FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -60,6 +55,7 @@ public class HomeSupplier extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "SupAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_supplier);
 
@@ -92,12 +88,12 @@ public class HomeSupplier extends AppCompatActivity {
         });
 
         rvRequests = findViewById(R.id.rvRequests);
-        requestsArrayList = new ArrayList<>();
+        ToDoList = new ArrayList<>();
         rvRequests.setHasFixedSize(true);
         rvRequests.setLayoutManager(new LinearLayoutManager(this));
-        checkboxAdapter = new CheckboxAdapter(requestsArrayList, this);
+        checkboxAdapter = new CheckboxAdapter(ToDoList, this);
         rvRequests.setAdapter(checkboxAdapter);
-        FirebaseHelper.getToDoPosts(requestsArrayList, checkboxAdapter);
+        FirebaseHelper.getToDoPosts(ToDoList, checkboxAdapter);
         checkboxAdapter.setOnClickListener(new CheckboxAdapter.OnClickListener() {
             @Override
             public void onClick(int position, Requests r) {
@@ -117,17 +113,6 @@ public class HomeSupplier extends AppCompatActivity {
                 finish();
             }
         });
-
-//        buttonSupplierLogout = findViewById(R.id.buttonLogout);
-//        buttonSupplierLogout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-//                Intent intent = new Intent(getApplicationContext(), Login.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        });
 
         buttonHistory = findViewById(R.id.buttonHistory);
         buttonHistory.setOnClickListener(new View.OnClickListener() {

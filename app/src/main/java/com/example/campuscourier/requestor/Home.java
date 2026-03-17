@@ -4,11 +4,17 @@ import static androidx.fragment.app.FragmentManager.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,8 +22,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.campuscourier.shared.DemeritPoints;
 import com.example.campuscourier.shared.Profile;
 import com.example.campuscourier.shared.Report;
+import com.example.campuscourier.shared.ReportStatus;
+import com.example.campuscourier.shared.ThemeManager;
 import com.example.campuscourier.shared.Users;
 import com.example.campuscourier.supplier.HomeSupplier;
 import com.example.campuscourier.shared.Login;
@@ -43,23 +52,26 @@ import java.util.Objects;
 
 public class Home extends AppCompatActivity {
 
-    Button buttonLogout, buttonToSupplier,buttonHistory;
+    Button buttonLogout, buttonToSupplier, buttonHistory;
     RecyclerView rvRequests;
     ArrayList<Requests> requestsArrayList;
     RequestAdapter requestAdapter;
     TextView name, number;
+    private int previousDemeritPoints;
     public static final String NEXT_SCREEN = "details_screen";
     static FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @SuppressLint("StaticFieldLeak")
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+    private static final String TAG = "Home";
+    String docId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "ReqAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         name = findViewById(R.id.name);
         db.collection("users").document(userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -78,7 +90,7 @@ public class Home extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // Count fetched successfully
                     AggregateQuerySnapshot snapshot = task.getResult();
-                    int n = (int)snapshot.getCount();
+                    int n = (int) snapshot.getCount();
                     String s = Integer.toString(n);
                     number.setText(s);
                     Log.d(TAG, "Count: " + snapshot.getCount());
@@ -87,6 +99,31 @@ public class Home extends AppCompatActivity {
                 }
             }
         });
+
+        db.collection("users").document(userId).addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                Long currentPoints = snapshot.getLong("points");
+                if (currentPoints != null) {
+                    int currentDemeritPoints = currentPoints.intValue();
+
+                    // Compare current points with previous points
+                    if (currentDemeritPoints < previousDemeritPoints) {
+                        showNotification("Demerit Points Given", "Someone was naughty your demerit points have been deducted!! Stop trolling >:(");
+                    }
+
+                    // Update previous points
+                    previousDemeritPoints = currentDemeritPoints;
+                }
+            } else {
+                Log.d(TAG, "Current data: null");
+            }
+        });
+
 
         rvRequests = findViewById(R.id.rvRequests);
         requestsArrayList = new ArrayList<>();
@@ -104,17 +141,6 @@ public class Home extends AppCompatActivity {
                 finish();
             }
         });
-
-//        buttonLogout = findViewById(R.id.buttonLogout);
-//        buttonLogout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-//                Intent intent = new Intent(getApplicationContext(), Login.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        });
 
 
         buttonToSupplier = findViewById(R.id.buttonToSupplier);
@@ -142,11 +168,10 @@ public class Home extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int ItemId = item.getItemId();
-                if (ItemId == R.id.nav_addRequest){
+                if (ItemId == R.id.nav_addRequest) {
                     startActivity(new Intent(Home.this, AddRequest.class));
                     return true;
-                }
-                else if (ItemId == R.id.nav_profile) {
+                } else if (ItemId == R.id.nav_profile) {
                     startActivity(new Intent(Home.this, Profile.class));
                     return true;
                 }
@@ -167,7 +192,7 @@ public class Home extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // Count fetched successfully
                     AggregateQuerySnapshot snapshot = task.getResult();
-                    int n = (int)snapshot.getCount();
+                    int n = (int) snapshot.getCount();
                     String s = Integer.toString(n);
                     number.setText(s);
                     Log.d(TAG, "Count: " + snapshot.getCount());
@@ -177,4 +202,53 @@ public class Home extends AppCompatActivity {
             }
         });
     }
+
+    private void showNotification(String title, String message) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Create a notification channel for Android Oreo and higher versions
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("default_channel", "Default Channel", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Intent intent = new Intent(this, DemeritPoints.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Optional flag to clear the activity stack
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        // Build the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "default_channel")
+                .setSmallIcon(R.drawable.courier)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent) // Set the PendingIntent for the notification
+                .setAutoCancel(true); // Automatically dismiss the notification when clicked
+
+        // Show the notification
+        notificationManager.notify(1, builder.build());
+    }
+//    private void showNotification_report(String title, String message) {
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        // Create a notification channel for Android Oreo and higher versions
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel("default_channel", "Default Channel", NotificationManager.IMPORTANCE_DEFAULT);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//
+//        Intent intent = new Intent(this, ReportStatus.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Optional flag to clear the activity stack
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+//        // Build the notification
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "default_channel")
+//                .setSmallIcon(R.drawable.courier)
+//                .setContentTitle(title)
+//                .setContentText(message)
+//                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+//                .setContentIntent(pendingIntent) // Set the PendingIntent for the notification
+//                .setAutoCancel(true); // Automatically dismiss the notification when clicked
+//
+//        // Show the notification
+//        notificationManager.notify(1, builder.build());
+//    }
 }

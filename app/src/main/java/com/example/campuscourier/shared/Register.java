@@ -38,10 +38,9 @@ public class Register extends AppCompatActivity {
     Button buttonRegister;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
-    TextView toLogin;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "ReqAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 

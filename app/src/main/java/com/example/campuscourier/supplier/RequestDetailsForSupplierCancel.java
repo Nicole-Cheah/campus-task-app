@@ -8,7 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +27,7 @@ import com.example.campuscourier.shared.CheckCompleted;
 import com.example.campuscourier.shared.FirebaseHelper;
 import com.example.campuscourier.shared.Report;
 import com.example.campuscourier.shared.Requests;
+import com.example.campuscourier.shared.ThemeManager;
 import com.example.campuscourier.shared.Users;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,15 +50,18 @@ public class RequestDetailsForSupplierCancel extends AppCompatActivity {
     static FirebaseAuth mAuth = FirebaseAuth.getInstance();
     static String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
     CheckCompleted checkCompleted = new CheckCompleted();
+    public static final String REPORT_SCREEN = "report_screen";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "SupAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_details_for_supplier_cancel);
         requestorTelegram = findViewById(R.id.requestorTelegram);
         itemName = findViewById(R.id.itemName);
         itemDescription = findViewById(R.id.itemDescription);
         image = findViewById(R.id.postImage);
+        image.setImageResource(R.drawable.image);
         expiryDate = findViewById(R.id.expiryDate);
         expiryTime = findViewById(R.id.expiryTime);
         location = findViewById(R.id.location);
@@ -66,6 +75,11 @@ public class RequestDetailsForSupplierCancel extends AppCompatActivity {
             // get the Serializable data model class with the details in it
             r = (Requests) getIntent().getSerializableExtra(HomeSupplier.NEXT_SCREEN);
         }
+        if (getIntent().hasExtra(Report.SUPPPLIERCANCEL_SCREEN)) {
+            // get the Serializable data model class with the details in it
+            r = (Requests) getIntent().getSerializableExtra(Report.SUPPPLIERCANCEL_SCREEN);
+            Log.d("INFO TRANSFERRED", "FROM REPORT");
+        }
         if (r != null) {
 
             db.collection("users").document(r.getUserId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -73,6 +87,18 @@ public class RequestDetailsForSupplierCancel extends AppCompatActivity {
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     Users u = documentSnapshot.toObject(Users.class);
                     requestorTelegram.setText(u.getTelegram());
+                    SpannableString spannableSupplier = new SpannableString(requestorTelegram.getText());
+                    ClickableSpan clickableSpan = new ClickableSpan() {
+                        @Override
+                        public void onClick(@NonNull View widget) {
+                            // Define the action to take when the Telegram username is clicked
+                            String username = requestorTelegram.getText().toString();
+                            openTelegram(username);
+                        }
+                    };
+                    spannableSupplier.setSpan(clickableSpan, 0, spannableSupplier.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    requestorTelegram.setText(spannableSupplier);
+                    requestorTelegram.setMovementMethod(LinkMovementMethod.getInstance()); // Enable clickable links in TextView
                 }
             });
 
@@ -97,6 +123,7 @@ public class RequestDetailsForSupplierCancel extends AppCompatActivity {
                     public void onFailure(@NonNull Exception exception) {
                         // Handle any errors
                         Log.d("IMAGE", "image not shown");
+                        image.setImageResource(R.drawable.image);
                     }});}
         }
 
@@ -132,6 +159,8 @@ public class RequestDetailsForSupplierCancel extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Report.class);
+                intent.putExtra(REPORT_SCREEN, r);
+                intent.putExtra("activity","RequestDetailsForSupplierCancel");
                 startActivity(intent);
                 finish();
             }
@@ -165,5 +194,10 @@ public class RequestDetailsForSupplierCancel extends AppCompatActivity {
                 }
             }
         });
+    }
+    private void openTelegram(String username) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://t.me/" + username));
+        startActivity(intent);
     }
 }

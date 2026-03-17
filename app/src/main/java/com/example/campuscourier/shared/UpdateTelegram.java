@@ -55,6 +55,7 @@ public class UpdateTelegram extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.set(this, "NeutralAppTheme");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_telegram);
         db = FirebaseFirestore.getInstance();

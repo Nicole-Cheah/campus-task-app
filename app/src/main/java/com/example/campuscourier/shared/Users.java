@@ -7,8 +7,6 @@ public class Users implements Serializable {
     private String email, telegram;
     private int points;
 
-    public Users() {
-    }
 
     public Users(String email, String telegram, int points) {
         this.email = email;
